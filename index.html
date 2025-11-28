@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moamen Rezk | Penetration Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --electric-blue: #00f3ff;
+            --cyber-purple: #b400ff;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(180, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(57, 255, 20, 0.1) 0%, transparent 50%);
+            animation: bgShift 20s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--electric-blue);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-purple));
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 5%;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .glitch {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: glitchText 3s infinite;
+        }
+
+        @keyframes glitchText {
+            0%, 90%, 100% { text-shadow: none; }
+            92% { text-shadow: 2px 0 var(--electric-blue), -2px 0 var(--cyber-purple); }
+            94% { text-shadow: -2px 0 var(--electric-blue), 2px 0 var(--cyber-purple); }
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: var(--electric-blue);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: 2px solid var(--electric-blue);
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 20px var(--electric-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-purple), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .card:hover::before {
+            animation: cardShine 1.5s ease infinite;
+        }
+
+        @keyframes cardShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--electric-blue);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .card h3 {
+            color: var(--electric-blue);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card p, .card ul {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li::before {
+            content: '▹ ';
+            color: var(--neon-green);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(180deg, var(--electric-blue), var(--cyber-purple));
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--electric-blue);
+        }
+
+        .timeline-date {
+            color: var(--electric-blue);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Skills */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--electric-blue);
+            border-radius: 20px;
+            color: var(--electric-blue);
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: var(--electric-blue);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Contact Section */
+        .contact-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--electric-blue);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .glitch {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            section {
+                padding: 3rem 5%;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-top: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: linear-gradient(135deg, var(--cyber-purple), var(--electric-blue));
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin: 0.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="glitch">MOAMEN MAHMOUD REZK</h1>
+            <p class="subtitle">Penetration Tester & Security Researcher</p>
+            <p class="hero-description">
+                Cybersecurity specialist with expertise in web application security, OSINT, and bug bounty hunting. 
+                Recognized by Google Bug Bounty & YesWeHack's Hall of Fame. Ranked #36 on Favikon's Top 200 Creators in Egypt.
+            </p>
+            <div class="cta-buttons">
+                <a href="#contact" class="btn">Get In Touch</a>
+                <a href="#projects" class="btn">View Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">About Me</h2>
+        <div class="card">
+            <h3>Education</h3>
+            <p><strong>B.Sc. in Computer Science</strong></p>
+            <p>Cairo Higher Institute for Engineering, Computer Science, and Management</p>
+            <p>GPA: 3.66/4.0 | 2021 – 2025 | New Cairo, Egypt</p>
+            <p style="margin-top: 1rem; color: var(--text-primary);">
+                Passionate about cybersecurity with a strong focus on penetration testing and vulnerability research. 
+                I combine technical expertise with creative problem-solving to identify and mitigate security risks.
+            </p>
+        </div>
+    </section>
+
+    <section id="experience">
+        <h2 class="section-title">Experience</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">09/2024 – Present</div>
+                <div class="card">
+                    <h3>Bug Hunter</h3>
+                    <p><strong>YesWeHack, HackerOne</strong></p>
+                    <p>Actively participate in bug bounty programs, focusing on finding and reporting web application vulnerabilities during free time.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">08/2025 – 10/2025</div>
+                <div class="card">
+                    <h3>Penetration Tester Intern</h3>
+                    <p><strong>Spark Professional Services | Maadi, Egypt</strong></p>
+                    <p>Performed penetration testing, vulnerability assessment, and exploitation across web, API, mobile (iOS & Android), and network environments to identify and mitigate security risks.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">10/2024 – 03/2025</div>
+                <div class="card">
+                    <h3>Penetration Tester</h3>
+                    <p><strong>Educational Website</strong></p>
+                    <p>Identified and exploited 12+ web vulnerabilities (e.g., IDOR, access control), leading to privilege escalation, account takeover, and API abuse. Provided recommendations to enhance security.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">05/2024 – 05/2025</div>
+                <div class="card">
+                    <h3>Trainee</h3>
+                    <p><strong>PortSwigger Academy</strong></p>
+                    <p>Solved 68% of labs focused on different types of security vulnerabilities.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">04/2024 – 05/2024</div>
+                <div class="card">
+                    <h3>Cybersecurity Bootcamp - Internship</h3>
+                    <p><strong>CyberTalents</strong></p>
+                    <p>Acquired practical experience in CTF challenges, encryption, hash cracking, digital forensics, web security, and vulnerability assessments. Collaborated within a team, leveraging tools such as Nmap, Kali Linux, and Burp Suite.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Projects</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>GoOrder - Graduation Project</h3>
+                <p class="timeline-date">10/2024 – 06/2025</p>
+                <p><strong>Role:</strong> Team Leader & Penetration Tester</p>
+                <ul>
+                    <li>Led a multidisciplinary team and assigned tasks efficiently</li>
+                    <li>Contributed across multiple areas to support the team</li>
+                    <li>Conducted penetration testing on website and app</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Waraqi - Gov Paperwork Solution</h3>
+                <p class="timeline-date">08/2025 – 10/2025</p>
+                <p><strong>Role:</strong> Team Leader & Frontend Developer</p>
+                <ul>
+                    <li>Built AI-powered platform for government paperwork</li>
+                    <li>Step-by-step guidance with real-time updates</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>CSRF Payload Generation Tool</h3>
+                <p><strong>Security Tool Development</strong></p>
+                <ul>
+                    <li>Created CSRF tool with HTTPS support</li>
+                    <li>Dynamic forms and auto-submit functionality</li>
+                    <li>CLI support for penetration testers</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>PHSAVER</h3>
+                <p class="timeline-date">04/2024</p>
+                <p><strong>Role:</strong> Full Stack Developer</p>
+                <ul>
+                    <li>Image storage platform using React.js, Node.js, MongoDB</li>
+                    <li>Reduces device storage requirements</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>X-Attendance</h3>
+                <p class="timeline-date">02/2024</p>
+                <p><strong>Role:</strong> Frontend Developer</p>
+                <ul>
+                    <li>Online attendance system for educational organization</li>
+                    <li>Currently in active use</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>X-FOOD</h3>
+                <p class="timeline-date">11/2023 – 01/2024</p>
+                <p><strong>Role:</strong> Frontend Developer</p>
+                <ul>
+                    <li>Comprehensive restaurant system website</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title">Technical Skills</h2>
+        
+        <h3 style="color: var(--electric-blue); margin: 2rem 0 1rem;">Security Tools</h3>
+        <div class="skills-container">
+            <span class="skill-tag">Burp Suite</span>
+            <span class="skill-tag">Nmap</span>
+            <span class="skill-tag">Gobuster</span>
+            <span class="skill-tag">Nuclei</span>
+            <span class="skill-tag">CyberChef</span>
+            <span class="skill-tag">Wappalyzer</span>
+            <span class="skill-tag">Sublister</span>
+            <span class="skill-tag">Kali Linux</span>
+        </div>
+
+        <h3 style="color: var(--cyber-purple); margin: 2rem 0 1rem;">Web Development</h3>
+        <div class="skills-container">
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">React.js</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Express.js</span>
+            <span class="skill-tag">MongoDB</span>
+        </div>
+
+        <h3 style="color: var(--neon-green); margin: 2rem 0 1rem;">IT & Network</h3>
+        <div class="skills-container">
+            <span class="skill-tag">Oracle Database</span>
+            <span class="skill-tag">MySQL</span>
+            <span class="skill-tag">Network Fundamentals</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">Windows</span>
+        </div>
+
+        <h3 style="color: var(--electric-blue); margin: 2rem 0 1rem;">Soft Skills</h3>
+        <div class="skills-container">
+            <span class="skill-tag">Self-Learning</span>
+            <span class="skill-tag">Deep Research</span>
+            <span class="skill-tag">Communication</span>
+            <span class="skill-tag">Teamwork</span>
+            <span class="skill-tag">Leadership</span>
+            <span class="skill-tag">Critical Thinking</span>
+            <span class="skill-tag">Problem Solving</span>
+        </div>
+    </section>
+
+    <section id="achievements">
+        <h2 class="section-title">Achievements & Recognition</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>🏆 Google Bug Bounty</h3>
+                <p>Earned two hashtags for successfully submitting valid security reports to Google Bug Bounty Program.</p>
+            </div>
+
+            <div class="card">
+                <h3>🎖️ YesWeHack Hall of Fame</h3>
+                <p>Discovered a critical SQL Injection in a private program, earning Hall of Fame recognition.</p>
+            </div>
+
+            <div class="card">
+                <h3>🌟 Favikon Top Creator</h3>
+                <p>Ranked #36 on Favikon's Top 200 Creators in Egypt (LinkedIn) through strategic content creation.</p>
+            </div>
+
+            <div class="card">
+                <h3>🥈 CyberTalents CTF</h3>
+                <p>23rd place out of 88 teams in competitive CTF competition.</p>
+            </div>
+
+            <div class="card">
+                <h3>🏅 0xl4ugh.CTF.ae</h3>
+                <p>61st place out of +400 teams in international CTF competition.</p>
+            </div>
+
+            <div class="card">
+                <h3>🥉 AI Line Follower</h3>
+                <p>3rd place out of 15 teams in AI robotics challenge.</p>
+            </div>
+        </div>
+
+        <h3 style="color: var(--electric-blue); margin: 3rem 0 1rem; text-align: center;">Certifications</h3>
+        <div class="skills-container">
+            <span class="achievement-badge">CNSP - The SecOps Group (11/2025)</span>
+            <span class="achievement-badge">McKinsey Forward Program (In Progress)</span>
+            <span class="achievement-badge">American Board English Diploma</span>
+            <span class="achievement-badge">TryHackMe - Pre Security Path</span>
+            <span class="achievement-badge">TryHackMe - Web Fundamentals</span>
+            <span class="achievement-badge">CyberTalents Bootcamp</span>
+            <span class="achievement-badge">Cisco - Intro to Cybersecurity</span>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-links">
+            <a href="mailto:chatmomen@gmail.com" class="contact-link">
+                📧 chatmomen@gmail.com
+            </a>
+            <a href="tel:+201092524194" class="contact-link">
+                📱 +20 109 252 4194
+            </a>
+            <a href="https://linkedin.com/in/moamen-rezk" target="_blank" class="contact-link">
+                💼 LinkedIn
+            </a>
+            <a href="https://medium.com/@moamen" target="_blank" class="contact-link">
+                ✍️ Medium
+            </a>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+            <p>📍 Cairo, Egypt</p>
+            <p style="margin-top: 0.5rem;">Open to opportunities in Penetration Testing & Cybersecurity</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Moamen Mahmoud Rezk. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Built with passion for cybersecurity 🔐</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
