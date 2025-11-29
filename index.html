@@ -1131,7 +1131,13 @@ Focused on bug bounty programs, exploit research, and AI integration in cybersec
         <p>&copy; 2025 Moamen Rezk. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">Built with passion for cybersecurity 🔐</p>
     </footer>
-
+<!-- Certificate Modal -->
+<div id="certModal" class="cert-modal" onclick="closeCertModal()">
+    <div class="cert-modal-content" onclick="event.stopPropagation()">
+        <span class="cert-modal-close" onclick="closeCertModal()">&times;</span>
+        <img id="certModalImg" src="" alt="Certificate">
+    </div>
+</div>
     <script>
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
