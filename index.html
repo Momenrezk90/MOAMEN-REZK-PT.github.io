@@ -241,6 +241,92 @@
             background-clip: text;
         }
 
+        /* Certificate Modal/Popup */
+.cert-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+}
+
+.cert-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    animation: zoomIn 0.3s ease;
+}
+
+.cert-modal-content img {
+    width: 100%;
+    height: auto;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 2px solid var(--electric-blue);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.5);
+}
+
+.cert-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: var(--text-primary);
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(180, 0, 255, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.cert-modal-close:hover {
+    color: var(--electric-blue);
+    background: rgba(0, 243, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.cert-image-placeholder {
+    cursor: pointer;
+}
+
+.cert-image-placeholder:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { 
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
         /* Cards */
         .cards-grid {
             display: grid;
@@ -902,94 +988,94 @@ Focused on bug bounty programs, exploit research, and AI integration in cybersec
         <h3 style="color: var(--electric-blue); margin: 3rem 0 1rem; text-align: center;">Certifications</h3>
         <div class="cards-grid">
             <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/CNSP.png" alt="CNSP Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>CNSP - Certified Network Security Practitioner</h3>
-                <p><strong>The SecOps Group</strong></p>
-                <p class="timeline-date">November 2025</p>
-            </div>
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/CNSP.png')">
+        <img src="certificates/CNSP.png" alt="CNSP Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>CNSP - Certified Network Security Practitioner</h3>
+    <p><strong>The SecOps Group</strong></p>
+    <p class="timeline-date">November 2025</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/mckinsey.jpg" alt="McKinsey Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>McKinsey Forward Program</h3>
-                <p><strong>McKinsey & Company</strong></p>
-                <p class="timeline-date">October 2025 – Present (In Progress)</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/mckinsey.jpg')">
+        <img src="certificates/mckinsey.jpg" alt="McKinsey Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>McKinsey Forward Program</h3>
+    <p><strong>McKinsey & Company</strong></p>
+    <p class="timeline-date">October 2025 – Present (In Progress)</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/Spark.JPG" alt="McKinsey Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Internship</h3>
-                <p><strong>Spark Professional Services</strong></p>
-                <p class="timeline-date">October 2025 – Present (In Progress)</p>
-            </div>
-            
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/Digitopia.png" alt="DIGITOPIA Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>DIGITOPIA Competition</h3>
-                <p><strong>Ministry of Communications and Information Technology, Egypt</strong></p>
-                <p class="timeline-date">October 2025</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/Spark.JPG')">
+        <img src="certificates/Spark.JPG" alt="Spark Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Internship</h3>
+    <p><strong>Spark Professional Services</strong></p>
+    <p class="timeline-date">October 2025</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/US English.png" alt="English Diploma Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>American Board English Diploma</h3>
-                <p><strong>U.S. Embassy Certified (300 Hours)</strong></p>
-                <p class="timeline-date">February 2025</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/Digitopia.png')">
+        <img src="certificates/Digitopia.png" alt="DIGITOPIA Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>DIGITOPIA Competition</h3>
+    <p><strong>Ministry of Communications and Information Technology, Egypt</strong></p>
+    <p class="timeline-date">October 2025</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/THM-Pre Security.png" alt="TryHackMe Pre Security" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Pre Security Learning Path</h3>
-                <p><strong>TryHackMe</strong></p>
-                <p class="timeline-date">July 2024</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/US English.png')">
+        <img src="certificates/US English.png" alt="English Diploma Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>American Board English Diploma</h3>
+    <p><strong>U.S. Embassy Certified (300 Hours)</strong></p>
+    <p class="timeline-date">February 2025</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/THM-LEARN Path.png" alt="TryHackMe Web Fundamentals" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Web Fundamentals Learning Path</h3>
-                <p><strong>TryHackMe</strong></p>
-                <p class="timeline-date">June 2024</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/THM-Pre Security.png')">
+        <img src="certificates/THM-Pre Security.png" alt="TryHackMe Pre Security" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Pre Security Learning Path</h3>
+    <p><strong>TryHackMe</strong></p>
+    <p class="timeline-date">July 2024</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/certificate.jpg" alt="CyberTalents Bootcamp" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Cybersecurity Bootcamp</h3>
-                <p><strong>CyberTalents</strong></p>
-                <p class="timeline-date">May 2024</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/THM-LEARN Path.png')">
+        <img src="certificates/THM-LEARN Path.png" alt="TryHackMe Web Fundamentals" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Web Fundamentals Learning Path</h3>
+    <p><strong>TryHackMe</strong></p>
+    <p class="timeline-date">June 2024</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/Cisco.png" alt="Cisco Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Introduction to Cybersecurity</h3>
-                <p><strong>Cisco Networking Academy</strong></p>
-                <p class="timeline-date">February 2024</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/certificate.jpg')">
+        <img src="certificates/certificate.jpg" alt="CyberTalents Bootcamp" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Cybersecurity Bootcamp</h3>
+    <p><strong>CyberTalents</strong></p>
+    <p class="timeline-date">May 2024</p>
+</div>
 
-            <div class="card cert-card">
-                <div class="cert-image-placeholder">
-                    <img src="certificates/network-fund.png" alt="Network Fundamentals" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
-                </div>
-                <h3>Computer Network Fundamentals</h3>
-                <p><strong>MaharaTech - ITIMooca</strong></p>
-                <p class="timeline-date">November 2023</p>
-            </div>
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/Cisco.png')">
+        <img src="certificates/Cisco.png" alt="Cisco Certificate" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Introduction to Cybersecurity</h3>
+    <p><strong>Cisco Networking Academy</strong></p>
+    <p class="timeline-date">February 2024</p>
+</div>
+
+<div class="card cert-card">
+    <div class="cert-image-placeholder" onclick="openCertModal('certificates/network-fund.png')">
+        <img src="certificates/network-fund.png" alt="Network Fundamentals" onerror="this.parentElement.innerHTML='📜 Upload Certificate Image'">
+    </div>
+    <h3>Computer Network Fundamentals</h3>
+    <p><strong>MaharaTech - ITIMooca</strong></p>
+    <p class="timeline-date">November 2023</p>
+</div>
         </div>
 
         <h3 style="color: var(--cyber-purple); margin: 3rem 0 1rem; text-align: center;">Courses Completed</h3>
@@ -1083,6 +1169,29 @@ Focused on bug bounty programs, exploit research, and AI integration in cybersec
                 }
             });
         });
+
+        // Certificate Modal Functions
+function openCertModal(imageSrc) {
+    const modal = document.getElementById('certModal');
+    const modalImg = document.getElementById('certModalImg');
+    
+    modalImg.src = imageSrc;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCertModal() {
+    const modal = document.getElementById('certModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCertModal();
+    }
+});
 
         // Intersection Observer for animations
         const observerOptions = {
