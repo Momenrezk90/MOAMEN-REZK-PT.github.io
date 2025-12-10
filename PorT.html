@@ -39,6 +39,119 @@
             0%, 100% { opacity: 0.3; }
             50% { opacity: 0.6; }
         }
+        
+        /* Seasonal Overlay */
+        #seasonalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        /* Winter - Snowflakes */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            opacity: 0.8;
+            animation: snowfall linear infinite;
+            text-shadow: 0 0 5px #fff;
+        }
+        
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+        
+        /* Spring - Cherry Blossoms */
+        .petal {
+            position: absolute;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #ffb7c5 0%, #ff85a1 100%);
+            border-radius: 50% 0 50% 0;
+            animation: petalfall linear infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes petalfall {
+            0% {
+                transform: translateY(0) rotate(0deg) translateX(0);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) translateX(50px);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) translateX(0);
+                opacity: 0.2;
+            }
+        }
+        
+        /* Summer - Fireflies */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
+            animation: firefly-float 8s ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes firefly-float {
+            0%, 100% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            50% {
+                transform: translate(var(--fx), var(--fy));
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+        }
+        
+        /* Autumn - Falling Leaves */
+        .leaf {
+            position: absolute;
+            top: -10px;
+            width: 15px;
+            height: 15px;
+            animation: leaffall linear infinite;
+            opacity: 0.8;
+        }
+        
+        @keyframes leaffall {
+            0% {
+                transform: translateY(0) rotate(0deg) translateX(0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) translateX(-30px);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) translateX(0);
+                opacity: 0.3;
+            }
+        }
+        
         @keyframes glitchText {
             0%, 90%, 100% { text-shadow: none; }
             92% { text-shadow: 2px 0 var(--electric-blue), -2px 0 var(--cyber-purple); }
@@ -179,7 +292,6 @@
             }
         }
         
-        /* Main Content Styles */
         #landingPage { 
             height: 100vh; 
             display: flex; 
@@ -346,6 +458,9 @@
 </head>
 <body>
     <div class="cyber-bg"></div>
+    
+    <!-- Seasonal Overlay -->
+    <div id="seasonalOverlay"></div>
 
     <!-- Epic Intro Screen -->
     <div id="introScreen">
@@ -385,29 +500,42 @@
     </div>
 
     <script>
-        // Audio Context for sound effects
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Enhanced Audio Context with user interaction
+        let audioContext;
+        let audioEnabled = false;
         
-        // Create whoosh sound effect
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioEnabled = true;
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+        
+        // Create whoosh sound effect with more volume
         function playWhooshSound() {
+            if (!audioEnabled) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.6);
             
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
             
             oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
+            oscillator.stop(audioContext.currentTime + 0.6);
         }
         
         // Create impact sound effect
         function playImpactSound() {
+            if (!audioEnabled) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             const filter = audioContext.createBiquadFilter();
@@ -417,21 +545,22 @@
             gainNode.connect(audioContext.destination);
             
             oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(30, audioContext.currentTime + 0.5);
             
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(800, audioContext.currentTime);
+            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
             
-            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
             
             oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
+            oscillator.stop(audioContext.currentTime + 0.5);
         }
         
         // Create electric zap sound
         function playZapSound() {
+            if (!audioEnabled) return;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             
@@ -439,14 +568,14 @@
             gainNode.connect(audioContext.destination);
             
             oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(1500, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(3000, audioContext.currentTime + 0.15);
             
-            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
             
             oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
+            oscillator.stop(audioContext.currentTime + 0.15);
         }
         
         // Create particles explosion
@@ -468,7 +597,6 @@
                 particle.style.left = '50%';
                 particle.style.top = '50%';
                 
-                // Random colors
                 const colors = ['#00f3ff', '#b400ff', '#39ff14'];
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 
@@ -478,8 +606,84 @@
             }
         }
         
+        // Seasonal Effects
+        function getSeason() {
+            const month = new Date().getMonth() + 1; // 1-12
+            if (month >= 3 && month <= 5) return 'spring';
+            if (month >= 6 && month <= 8) return 'summer';
+            if (month >= 9 && month <= 11) return 'autumn';
+            return 'winter';
+        }
+        
+        function createSeasonalEffects() {
+            const season = getSeason();
+            const overlay = document.getElementById('seasonalOverlay');
+            
+            if (season === 'winter') {
+                // Snowflakes
+                for (let i = 0; i < 50; i++) {
+                    const snowflake = document.createElement('div');
+                    snowflake.className = 'snowflake';
+                    snowflake.textContent = '❄';
+                    snowflake.style.left = Math.random() * 100 + '%';
+                    snowflake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
+                    snowflake.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    snowflake.style.animationDelay = Math.random() * 10 + 's';
+                    overlay.appendChild(snowflake);
+                }
+            } else if (season === 'spring') {
+                // Cherry blossom petals
+                for (let i = 0; i < 30; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                    petal.style.animationDelay = Math.random() * 8 + 's';
+                    overlay.appendChild(petal);
+                }
+            } else if (season === 'summer') {
+                // Fireflies
+                for (let i = 0; i < 20; i++) {
+                    const firefly = document.createElement('div');
+                    firefly.className = 'firefly';
+                    const startX = Math.random() * 100;
+                    const startY = Math.random() * 100;
+                    firefly.style.left = startX + '%';
+                    firefly.style.top = startY + '%';
+                    firefly.style.setProperty('--fx', (Math.random() * 200 - 100) + 'px');
+                    firefly.style.setProperty('--fy', (Math.random() * 200 - 100) + 'px');
+                    firefly.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                    firefly.style.animationDelay = Math.random() * 5 + 's';
+                    overlay.appendChild(firefly);
+                }
+            } else if (season === 'autumn') {
+                // Falling leaves
+                const leafEmojis = ['🍂', '🍁'];
+                for (let i = 0; i < 30; i++) {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'leaf';
+                    leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+                    leaf.style.left = Math.random() * 100 + '%';
+                    leaf.style.fontSize = (Math.random() * 1 + 0.7) + 'em';
+                    leaf.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    leaf.style.animationDelay = Math.random() * 10 + 's';
+                    overlay.appendChild(leaf);
+                }
+            }
+        }
+        
+        // Initialize everything on user interaction
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('touchstart', initAudio, { once: true });
+        
         // Initialize intro sequence
         window.addEventListener('load', () => {
+            // Create seasonal effects
+            createSeasonalEffects();
+            
+            // Initialize audio on load
+            initAudio();
+            
             // Play initial whoosh
             setTimeout(() => playWhooshSound(), 100);
             
@@ -502,14 +706,15 @@
         // Add hover sound effects to cards
         document.querySelectorAll('.choice-card').forEach(card => {
             card.addEventListener('mouseenter', () => {
+                if (!audioEnabled) return;
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
                 
                 osc.connect(gain);
                 gain.connect(audioContext.destination);
                 
-                osc.frequency.value = 800;
-                gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+                osc.frequency.value = 1200;
+                gain.gain.setValueAtTime(0.15, audioContext.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
                 
                 osc.start();
