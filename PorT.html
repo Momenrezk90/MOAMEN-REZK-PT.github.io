@@ -43,22 +43,157 @@
             0%, 90%, 100% { text-shadow: none; }
             92% { text-shadow: 2px 0 var(--electric-blue), -2px 0 var(--cyber-purple); }
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         @keyframes cardShine {
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
+        /* Intro Animation Styles */
+        #introScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+        }
+        
+        #introScreen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .intro-content {
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-reveal {
+            font-size: 6rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyber-purple), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: logoReveal 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        
+        @keyframes logoReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotateY(-180deg);
+                filter: blur(20px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotateY(0deg);
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg);
+                filter: blur(0px);
+            }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 2s ease-out forwards;
+            box-shadow: 0 0 10px var(--electric-blue);
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+        
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 243, 255, 0.1) 25%, 
+                transparent 50%, 
+                rgba(180, 0, 255, 0.1) 75%, 
+                transparent 100%);
+            animation: glitchSweep 1.5s ease-in-out 0.5s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes glitchSweep {
+            0%, 100% { 
+                opacity: 0;
+                transform: translateX(-100%) skewX(-20deg);
+            }
+            50% { 
+                opacity: 1;
+                transform: translateX(100%) skewX(-20deg);
+            }
+        }
+        
+        .shock-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--electric-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: shockWave 2s ease-out forwards;
+            box-shadow: 0 0 20px var(--electric-blue);
+        }
+        
+        @keyframes shockWave {
+            0% {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            }
+            100% {
+                width: 2000px;
+                height: 2000px;
+                opacity: 0;
+            }
+        }
+        
+        /* Main Content Styles */
         #landingPage { 
             height: 100vh; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 2rem; 
+            padding: 2rem;
+            opacity: 0;
+            animation: fadeInMain 1s ease forwards 3s;
         }
+        
+        @keyframes fadeInMain {
+            to { opacity: 1; }
+        }
+        
         .landing-content { 
             text-align: center; 
             max-width: 1000px; 
@@ -73,12 +208,34 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            transform: translateY(-50px);
+            opacity: 0;
+            animation: slideInTitle 1s ease forwards 3.5s;
         }
+        
+        @keyframes slideInTitle {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         .landing-subtitle { 
             font-size: 1.5rem; 
             color: var(--text-secondary); 
-            margin-bottom: 2rem; 
+            margin-bottom: 2rem;
+            transform: translateY(-30px);
+            opacity: 0;
+            animation: slideInSubtitle 1s ease forwards 3.8s;
         }
+        
+        @keyframes slideInSubtitle {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         .choice-cards { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -100,7 +257,26 @@
             text-decoration: none;
             display: block;
             color: inherit;
+            transform: scale(0.8);
+            opacity: 0;
+            animation: cardPopIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
+        
+        .choice-card:nth-child(1) {
+            animation-delay: 4.1s;
+        }
+        
+        .choice-card:nth-child(2) {
+            animation-delay: 4.4s;
+        }
+        
+        @keyframes cardPopIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
         .choice-card::before {
             content: '';
             position: absolute;
@@ -148,6 +324,7 @@
                 min-height: 100vh;
             }
             .landing-title { font-size: 2.5rem; }
+            .logo-reveal { font-size: 3rem; }
             .choice-cards { 
                 grid-template-columns: 1fr; 
                 gap: 1.5rem;
@@ -163,12 +340,23 @@
             .choice-description { font-size: 0.9rem; }
             .choice-icon { font-size: 3rem; }
             .choice-title { font-size: 1.5rem; }
+            .logo-reveal { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
     <div class="cyber-bg"></div>
 
+    <!-- Epic Intro Screen -->
+    <div id="introScreen">
+        <div class="intro-content">
+            <div class="shock-wave"></div>
+            <div class="glitch-overlay"></div>
+            <h1 class="logo-reveal">MOAMEN REZK</h1>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div id="landingPage">
         <div class="landing-content">
             <h1 class="landing-title">MOAMEN REZK</h1>
@@ -195,5 +383,139 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Audio Context for sound effects
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create whoosh sound effect
+        function playWhooshSound() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        // Create impact sound effect
+        function playImpactSound() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.3);
+            
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(800, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+        
+        // Create electric zap sound
+        function playZapSound() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+        
+        // Create particles explosion
+        function createParticles() {
+            const introContent = document.querySelector('.intro-content');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 200 + Math.random() * 300;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                
+                // Random colors
+                const colors = ['#00f3ff', '#b400ff', '#39ff14'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                introContent.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+        
+        // Initialize intro sequence
+        window.addEventListener('load', () => {
+            // Play initial whoosh
+            setTimeout(() => playWhooshSound(), 100);
+            
+            // Play impact sound when logo appears
+            setTimeout(() => {
+                playImpactSound();
+                createParticles();
+            }, 800);
+            
+            // Play zap sound during glitch effect
+            setTimeout(() => playZapSound(), 1500);
+            
+            // Hide intro screen
+            setTimeout(() => {
+                document.getElementById('introScreen').classList.add('hide');
+                playWhooshSound();
+            }, 3000);
+        });
+        
+        // Add hover sound effects to cards
+        document.querySelectorAll('.choice-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.frequency.value = 800;
+                gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.1);
+            });
+        });
+    </script>
 </body>
 </html>
