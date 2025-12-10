@@ -51,7 +51,6 @@
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
-        /* Landing Page Styles */
         #landingPage { 
             min-height: 100vh; 
             display: flex; 
@@ -68,6 +67,7 @@
             background: linear-gradient(90deg, var(--electric-blue), var(--cyber-purple), var(--neon-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .landing-subtitle { 
             font-size: 1.5rem; 
@@ -91,6 +91,7 @@
             overflow: hidden;
             text-decoration: none;
             display: block;
+            color: inherit;
         }
         .choice-card::before {
             content: '';
@@ -141,28 +142,27 @@
 <body>
     <div class="cyber-bg"></div>
 
-    <!-- Landing Page -->
     <div id="landingPage">
         <div class="landing-content">
             <h1 class="landing-title">MOAMEN REZK</h1>
             <p class="landing-subtitle">Choose Your Path</p>
             
             <div class="choice-cards">
-                <a href="Cy-PT.html" class="choice-card">
+                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Cy-PT.html" class="choice-card" target="_blank" rel="noopener noreferrer">
                     <div class="choice-icon">🔐</div>
                     <h2 class="choice-title">Cybersecurity</h2>
                     <p class="choice-description">
                         Penetration Tester & Security Researcher<br>
-                        Specialized in web/mobile security, OSINT, CTF, and bug bounty hunting.
+                        Specialized in web/mobile security, OSINT, and bug bounty hunting
                     </p>
                 </a>
 
-                <a href="Mark-PT.html" class="choice-card marketing">
+                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Mark-PT.html" class="choice-card marketing" target="_blank" rel="noopener noreferrer">
                     <div class="choice-icon">🎨</div>
                     <h2 class="choice-title">Tech Marketing</h2>
                     <p class="choice-description">
                         Tech Marketing Specialist & AI-Driven Content Creator<br>
-                        Ranked #36 on Favikon's Top 200 Creators in Egypt.
+                        Ranked #36 on Favikon's Top 200 Creators in Egypt
                     </p>
                 </a>
             </div>
