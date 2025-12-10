@@ -399,8 +399,15 @@
             background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
             transform: rotate(45deg);
             transition: all 0.5s;
+            z-index: 0;
         }
         .choice-card:hover::before { animation: cardShine 1.5s ease infinite; }
+        
+        .choice-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
         .choice-card:hover {
             transform: translateY(-10px) scale(1.02);
             border-color: var(--electric-blue);
@@ -428,6 +435,7 @@
             background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
             pointer-events: none;
             animation: freezePulse 0.6s ease forwards;
+            z-index: 2;
         }
         
         @keyframes freezePulse {
@@ -443,6 +451,7 @@
             pointer-events: none;
             animation: iceCrystalForm 0.6s ease forwards;
             text-shadow: 0 0 10px #00d4ff;
+            z-index: 3;
         }
         
         @keyframes iceCrystalForm {
@@ -474,6 +483,7 @@
             background: radial-gradient(circle, rgba(255, 183, 197, 0.3) 0%, transparent 70%);
             pointer-events: none;
             animation: bloomPulse 0.8s ease forwards;
+            z-index: 2;
         }
         
         @keyframes bloomPulse {
@@ -490,6 +500,7 @@
             opacity: 0;
             pointer-events: none;
             animation: flowerBurst 0.8s ease-out forwards;
+            z-index: 3;
         }
         
         @keyframes flowerBurst {
@@ -521,6 +532,7 @@
             background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, transparent 70%);
             pointer-events: none;
             animation: sizzlePulse 0.5s ease forwards;
+            z-index: 2;
         }
         
         @keyframes sizzlePulse {
@@ -542,6 +554,7 @@
             opacity: 0;
             pointer-events: none;
             animation: heatWaveRise 0.6s ease-out forwards;
+            z-index: 3;
         }
         
         @keyframes heatWaveRise {
@@ -569,6 +582,7 @@
             opacity: 0;
             pointer-events: none;
             animation: sparkFly 0.8s ease-out forwards;
+            z-index: 3;
         }
         
         @keyframes sparkFly {
@@ -596,6 +610,7 @@
             background: radial-gradient(circle, rgba(139, 69, 19, 0.2) 0%, transparent 70%);
             pointer-events: none;
             animation: rustlePulse 0.5s ease forwards;
+            z-index: 2;
         }
         
         @keyframes rustlePulse {
@@ -610,6 +625,7 @@
             opacity: 0;
             pointer-events: none;
             animation: leafSwirl 1s ease-out forwards;
+            z-index: 3;
         }
         
         @keyframes leafSwirl {
@@ -1043,12 +1059,19 @@
                 const season = getSeason();
                 const cards = document.querySelectorAll('.choice-card');
                 
+                console.log('Season detected:', season);
+                console.log('Cards found:', cards.length);
+                
                 cards.forEach(card => {
-                    card.addEventListener('mouseenter', function() {
+                    card.addEventListener('mouseenter', function(e) {
+                        console.log('Mouse entered card');
+                        
                         // Ensure audio is initialized
                         if (!audioEnabled) {
                             initAudio();
                         }
+                        
+                        console.log('Triggering', season, 'effect');
                         
                         if (season === 'winter') {
                             createWinterEffect(this);
@@ -1063,6 +1086,7 @@
                     
                     // Remove class on mouse leave to allow re-triggering
                     card.addEventListener('mouseleave', function() {
+                        console.log('Mouse left card');
                         setTimeout(() => {
                             this.classList.remove('frozen', 'blooming', 'sizzling', 'rustling');
                         }, 600);
