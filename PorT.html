@@ -410,6 +410,175 @@
             border-color: var(--cyber-purple);
             box-shadow: 0 20px 50px rgba(180, 0, 255, 0.4);
         }
+        
+        /* Seasonal Hover Effects */
+        .choice-card.frozen {
+            animation: freezeEffect 0.6s ease forwards;
+            border-color: #00d4ff !important;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        @keyframes freezeEffect {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+            100% { filter: brightness(1.2); }
+        }
+        
+        .ice-crystal {
+            position: absolute;
+            color: #fff;
+            font-size: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            animation: iceCrystalForm 0.6s ease forwards;
+            text-shadow: 0 0 10px #00d4ff;
+        }
+        
+        @keyframes iceCrystalForm {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.2) rotate(180deg);
+            }
+            100% {
+                opacity: 0.8;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+        
+        .choice-card.blooming {
+            animation: bloomEffect 0.8s ease forwards;
+        }
+        
+        @keyframes bloomEffect {
+            0% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(20deg) brightness(1.3); }
+            100% { filter: hue-rotate(0deg) brightness(1.1); }
+        }
+        
+        .flower-burst {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ffb7c5, #ff85a1);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: flowerBurst 0.8s ease-out forwards;
+        }
+        
+        @keyframes flowerBurst {
+            0% {
+                opacity: 1;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5) translateY(-50px);
+            }
+        }
+        
+        .choice-card.sizzling {
+            animation: sizzleEffect 0.5s ease forwards;
+        }
+        
+        @keyframes sizzleEffect {
+            0%, 100% { filter: brightness(1); }
+            25% { filter: brightness(1.4) saturate(1.5); }
+            50% { filter: brightness(1.2) saturate(1.3); }
+            75% { filter: brightness(1.5) saturate(1.4); }
+        }
+        
+        .heat-wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                rgba(255, 165, 0, 0.2) 50%, 
+                transparent 100%);
+            opacity: 0;
+            pointer-events: none;
+            animation: heatWaveRise 0.6s ease-out forwards;
+        }
+        
+        @keyframes heatWaveRise {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scaleY(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateY(-20%) scaleY(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100%) scaleY(0.5);
+            }
+        }
+        
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffeb3b;
+            opacity: 0;
+            pointer-events: none;
+            animation: sparkFly 0.8s ease-out forwards;
+        }
+        
+        @keyframes sparkFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--sx), var(--sy)) scale(0);
+            }
+        }
+        
+        .choice-card.rustling {
+            animation: rustleEffect 0.5s ease forwards;
+        }
+        
+        @keyframes rustleEffect {
+            0%, 100% { filter: brightness(1) sepia(0); }
+            25% { filter: brightness(1.2) sepia(0.3); }
+            50% { filter: brightness(1.1) sepia(0.2); }
+            75% { filter: brightness(1.3) sepia(0.4); }
+        }
+        
+        .leaf-swirl {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0;
+            pointer-events: none;
+            animation: leafSwirl 1s ease-out forwards;
+        }
+        
+        @keyframes leafSwirl {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--lx), var(--ly)) rotate(720deg) scale(0.3);
+            }
+        }
+        
         .choice-icon { 
             font-size: 3.5rem; 
             margin-bottom: 1rem; 
@@ -514,27 +683,28 @@
             }
         }
         
-        // Seasonal sound effects
-        function playSeasonalIntroSound() {
+        // Seasonal hover sound effects
+        function playFreezeSound() {
             if (!audioEnabled) return;
-            const season = getSeason();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
             
-            if (season === 'winter') {
-                // Gentle wind chime sound
-                playWindChime();
-            } else if (season === 'spring') {
-                // Soft bird chirp
-                playBirdChirp();
-            } else if (season === 'summer') {
-                // Ocean wave sound
-                playOceanWave();
-            } else if (season === 'autumn') {
-                // Rustling leaves
-                playRustlingLeaves();
-            }
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200, audioContext.currentTime);
+            osc.frequency.linearRampToValueAtTime(400, audioContext.currentTime + 0.4);
+            
+            gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.4);
         }
         
-        function playWindChime() {
+        function playBloomSound() {
+            if (!audioEnabled) return;
             const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
             notes.forEach((freq, i) => {
                 const osc = audioContext.createOscillator();
@@ -546,36 +716,42 @@
                 osc.type = 'sine';
                 osc.frequency.value = freq;
                 
-                const startTime = audioContext.currentTime + i * 0.2;
+                const startTime = audioContext.currentTime + i * 0.08;
                 gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(0.15, startTime + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 1.5);
+                gain.gain.linearRampToValueAtTime(0.1, startTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
                 
                 osc.start(startTime);
-                osc.stop(startTime + 1.5);
+                osc.stop(startTime + 0.4);
             });
         }
         
-        function playBirdChirp() {
+        function playSizzleSound() {
+            if (!audioEnabled) return;
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
             
-            osc.connect(gain);
+            osc.connect(filter);
+            filter.connect(gain);
             gain.connect(audioContext.destination);
             
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(2000, audioContext.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(3000, audioContext.currentTime + 0.1);
-            osc.frequency.exponentialRampToValueAtTime(2500, audioContext.currentTime + 0.2);
+            osc.type = 'sawtooth';
+            osc.frequency.value = 3000;
             
-            gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+            filter.type = 'bandpass';
+            filter.frequency.value = 4000;
+            filter.Q.value = 10;
+            
+            gain.gain.setValueAtTime(0.08, audioContext.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
             
             osc.start(audioContext.currentTime);
             osc.stop(audioContext.currentTime + 0.3);
         }
         
-        function playOceanWave() {
+        function playCrunchSound() {
+            if (!audioEnabled) return;
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             const filter = audioContext.createBiquadFilter();
@@ -584,89 +760,19 @@
             filter.connect(gain);
             gain.connect(audioContext.destination);
             
-            osc.type = 'sine';
-            osc.frequency.value = 100;
-            
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(200, audioContext.currentTime);
-            filter.frequency.linearRampToValueAtTime(600, audioContext.currentTime + 1);
-            filter.frequency.linearRampToValueAtTime(200, audioContext.currentTime + 2);
-            
-            gain.gain.setValueAtTime(0, audioContext.currentTime);
-            gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.5);
-            gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 2);
-            
-            osc.start(audioContext.currentTime);
-            osc.stop(audioContext.currentTime + 2);
-        }
-        
-        function playRustlingLeaves() {
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            const filter = audioContext.createBiquadFilter();
-            
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioContext.destination);
-            
-            osc.type = 'sine';
-            osc.frequency.value = 300;
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, audioContext.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, audioContext.currentTime + 0.2);
             
             filter.type = 'bandpass';
-            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            filter.frequency.value = 800;
             filter.Q.value = 5;
             
-            gain.gain.setValueAtTime(0, audioContext.currentTime);
-            gain.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.2);
-            gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.4);
-            gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
             
             osc.start(audioContext.currentTime);
-            osc.stop(audioContext.currentTime + 1);
-        }
-        
-        // Gentle appearance sound
-        function playSoftAppearSound() {
-            if (!audioEnabled) return;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(440, audioContext.currentTime);
-            osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.8);
-            
-            gain.gain.setValueAtTime(0, audioContext.currentTime);
-            gain.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.2);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
-            
-            osc.start(audioContext.currentTime);
-            osc.stop(audioContext.currentTime + 0.8);
-        }
-        
-        // Soft shimmer for logo reveal
-        function playShimmerSound() {
-            if (!audioEnabled) return;
-            [659.25, 783.99, 987.77].forEach((freq, i) => {
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                
-                const startTime = audioContext.currentTime + i * 0.15;
-                gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(0.12, startTime + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.6);
-                
-                osc.start(startTime);
-                osc.stop(startTime + 0.6);
-            });
+            osc.stop(audioContext.currentTime + 0.3);
         }
         
         // Create particles explosion
@@ -695,6 +801,105 @@
                 
                 setTimeout(() => particle.remove(), 2000);
             }
+        }
+        
+        // Seasonal card hover effects
+        function createWinterEffect(card) {
+            card.classList.add('frozen');
+            playFreezeSound();
+            
+            // Create ice crystals
+            for (let i = 0; i < 8; i++) {
+                const crystal = document.createElement('div');
+                crystal.className = 'ice-crystal';
+                crystal.textContent = '❄';
+                crystal.style.left = Math.random() * 100 + '%';
+                crystal.style.top = Math.random() * 100 + '%';
+                crystal.style.animationDelay = (i * 0.05) + 's';
+                card.appendChild(crystal);
+                
+                setTimeout(() => crystal.remove(), 600);
+            }
+            
+            setTimeout(() => card.classList.remove('frozen'), 600);
+        }
+        
+        function createSpringEffect(card) {
+            card.classList.add('blooming');
+            playBloomSound();
+            
+            // Create flower bursts
+            for (let i = 0; i < 12; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower-burst';
+                const angle = (Math.PI * 2 * i) / 12;
+                const distance = 100;
+                flower.style.left = '50%';
+                flower.style.top = '50%';
+                flower.style.transform = `translate(-50%, -50%)`;
+                flower.style.animationDelay = (i * 0.03) + 's';
+                card.appendChild(flower);
+                
+                setTimeout(() => flower.remove(), 800);
+            }
+            
+            setTimeout(() => card.classList.remove('blooming'), 800);
+        }
+        
+        function createSummerEffect(card) {
+            card.classList.add('sizzling');
+            playSizzleSound();
+            
+            // Create heat waves
+            const heatWave = document.createElement('div');
+            heatWave.className = 'heat-wave';
+            card.appendChild(heatWave);
+            
+            // Create sparks
+            for (let i = 0; i < 15; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.left = Math.random() * 100 + '%';
+                spark.style.top = Math.random() * 100 + '%';
+                spark.style.setProperty('--sx', (Math.random() * 200 - 100) + 'px');
+                spark.style.setProperty('--sy', (Math.random() * 200 - 100) + 'px');
+                spark.style.animationDelay = (i * 0.05) + 's';
+                card.appendChild(spark);
+                
+                setTimeout(() => spark.remove(), 800);
+            }
+            
+            setTimeout(() => {
+                card.classList.remove('sizzling');
+                heatWave.remove();
+            }, 600);
+        }
+        
+        function createAutumnEffect(card) {
+            card.classList.add('rustling');
+            playCrunchSound();
+            
+            // Create swirling leaves
+            const leafEmojis = ['🍂', '🍁'];
+            for (let i = 0; i < 10; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf-swirl';
+                leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+                leaf.style.left = '50%';
+                leaf.style.top = '50%';
+                
+                const angle = (Math.PI * 2 * i) / 10;
+                const distance = 150;
+                leaf.style.setProperty('--lx', Math.cos(angle) * distance + 'px');
+                leaf.style.setProperty('--ly', Math.sin(angle) * distance + 'px');
+                leaf.style.animationDelay = (i * 0.05) + 's';
+                
+                card.appendChild(leaf);
+                
+                setTimeout(() => leaf.remove(), 1000);
+            }
+            
+            setTimeout(() => card.classList.remove('rustling'), 500);
         }
         
         // Seasonal Effects
@@ -775,43 +980,36 @@
             // Initialize audio on load
             initAudio();
             
-            // Play soft seasonal intro sound
-            setTimeout(() => playSeasonalIntroSound(), 200);
-            
-            // Play shimmer sound when logo appears
+            // Create particles
             setTimeout(() => {
-                playShimmerSound();
                 createParticles();
             }, 800);
             
-            // Play soft appearance sound
-            setTimeout(() => playSoftAppearSound(), 1800);
-            
-            // Hide intro screen with gentle sound
+            // Hide intro screen
             setTimeout(() => {
                 document.getElementById('introScreen').classList.add('hide');
-                setTimeout(() => playSeasonalIntroSound(), 100);
             }, 3000);
         });
         
-        // Add hover sound effects to cards
-        document.querySelectorAll('.choice-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (!audioEnabled) return;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                
-                osc.type = 'sine';
-                osc.frequency.value = 800;
-                gain.gain.setValueAtTime(0.08, audioContext.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                
-                osc.start();
-                osc.stop(audioContext.currentTime + 0.2);
-            });
+        // Add seasonal hover effects to cards
+        window.addEventListener('DOMContentLoaded', () => {
+            const season = getSeason();
+            
+            setTimeout(() => {
+                document.querySelectorAll('.choice-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        if (season === 'winter') {
+                            createWinterEffect(card);
+                        } else if (season === 'spring') {
+                            createSpringEffect(card);
+                        } else if (season === 'summer') {
+                            createSummerEffect(card);
+                        } else if (season === 'autumn') {
+                            createAutumnEffect(card);
+                        }
+                    });
+                });
+            }, 4500);
         });
     </script>
 </body>
