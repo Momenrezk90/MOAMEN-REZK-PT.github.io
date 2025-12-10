@@ -514,68 +514,159 @@
             }
         }
         
-        // Create whoosh sound effect with more volume
-        function playWhooshSound() {
+        // Seasonal sound effects
+        function playSeasonalIntroSound() {
             if (!audioEnabled) return;
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            const season = getSeason();
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.6);
-            
-            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.6);
+            if (season === 'winter') {
+                // Gentle wind chime sound
+                playWindChime();
+            } else if (season === 'spring') {
+                // Soft bird chirp
+                playBirdChirp();
+            } else if (season === 'summer') {
+                // Ocean wave sound
+                playOceanWave();
+            } else if (season === 'autumn') {
+                // Rustling leaves
+                playRustlingLeaves();
+            }
         }
         
-        // Create impact sound effect
-        function playImpactSound() {
-            if (!audioEnabled) return;
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+        function playWindChime() {
+            const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+            notes.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                
+                const startTime = audioContext.currentTime + i * 0.2;
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.15, startTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 1.5);
+                
+                osc.start(startTime);
+                osc.stop(startTime + 1.5);
+            });
+        }
+        
+        function playBirdChirp() {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(2000, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(3000, audioContext.currentTime + 0.1);
+            osc.frequency.exponentialRampToValueAtTime(2500, audioContext.currentTime + 0.2);
+            
+            gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.3);
+        }
+        
+        function playOceanWave() {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
             const filter = audioContext.createBiquadFilter();
             
-            oscillator.connect(filter);
-            filter.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
             
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(30, audioContext.currentTime + 0.5);
+            osc.type = 'sine';
+            osc.frequency.value = 100;
             
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            filter.frequency.setValueAtTime(200, audioContext.currentTime);
+            filter.frequency.linearRampToValueAtTime(600, audioContext.currentTime + 1);
+            filter.frequency.linearRampToValueAtTime(200, audioContext.currentTime + 2);
             
-            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.5);
+            gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 2);
             
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.5);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 2);
         }
         
-        // Create electric zap sound
-        function playZapSound() {
+        function playRustlingLeaves() {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.value = 300;
+            
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            filter.Q.value = 5;
+            
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.2);
+            gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.4);
+            gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 1);
+        }
+        
+        // Gentle appearance sound
+        function playSoftAppearSound() {
             if (!audioEnabled) return;
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
             
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(1500, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(3000, audioContext.currentTime + 0.15);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioContext.currentTime);
+            osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.8);
             
-            gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
             
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.15);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.8);
+        }
+        
+        // Soft shimmer for logo reveal
+        function playShimmerSound() {
+            if (!audioEnabled) return;
+            [659.25, 783.99, 987.77].forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                
+                const startTime = audioContext.currentTime + i * 0.15;
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.12, startTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.6);
+                
+                osc.start(startTime);
+                osc.stop(startTime + 0.6);
+            });
         }
         
         // Create particles explosion
@@ -684,22 +775,22 @@
             // Initialize audio on load
             initAudio();
             
-            // Play initial whoosh
-            setTimeout(() => playWhooshSound(), 100);
+            // Play soft seasonal intro sound
+            setTimeout(() => playSeasonalIntroSound(), 200);
             
-            // Play impact sound when logo appears
+            // Play shimmer sound when logo appears
             setTimeout(() => {
-                playImpactSound();
+                playShimmerSound();
                 createParticles();
             }, 800);
             
-            // Play zap sound during glitch effect
-            setTimeout(() => playZapSound(), 1500);
+            // Play soft appearance sound
+            setTimeout(() => playSoftAppearSound(), 1800);
             
-            // Hide intro screen
+            // Hide intro screen with gentle sound
             setTimeout(() => {
                 document.getElementById('introScreen').classList.add('hide');
-                playWhooshSound();
+                setTimeout(() => playSeasonalIntroSound(), 100);
             }, 3000);
         });
         
@@ -713,12 +804,13 @@
                 osc.connect(gain);
                 gain.connect(audioContext.destination);
                 
-                osc.frequency.value = 1200;
-                gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                osc.type = 'sine';
+                osc.frequency.value = 800;
+                gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
                 
                 osc.start();
-                osc.stop(audioContext.currentTime + 0.1);
+                osc.stop(audioContext.currentTime + 0.2);
             });
         });
     </script>
