@@ -19,8 +19,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
-            overflow-x: hidden;
+            overflow: hidden;
             line-height: 1.6;
+            height: 100vh;
         }
         .cyber-bg {
             position: fixed;
@@ -52,13 +53,17 @@
         }
         
         #landingPage { 
-            min-height: 100vh; 
+            height: 100vh; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             padding: 2rem; 
         }
-        .landing-content { text-align: center; max-width: 1000px; }
+        .landing-content { 
+            text-align: center; 
+            max-width: 1000px; 
+            width: 100%;
+        }
         .landing-title {
             font-size: 4.5rem;
             font-weight: bold;
@@ -72,17 +77,20 @@
         .landing-subtitle { 
             font-size: 1.5rem; 
             color: var(--text-secondary); 
-            margin-bottom: 3rem; 
+            margin-bottom: 2rem; 
         }
         .choice-cards { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 2rem; 
-            margin-top: 3rem; 
+            margin-top: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .choice-card {
             background: var(--card-bg);
-            padding: 3rem 2rem;
+            padding: 2.5rem 2rem;
             border-radius: 15px;
             border: 2px solid rgba(0, 243, 255, 0.3);
             cursor: pointer;
@@ -114,28 +122,47 @@
             border-color: var(--cyber-purple);
             box-shadow: 0 20px 50px rgba(180, 0, 255, 0.4);
         }
-        .choice-icon { font-size: 4rem; margin-bottom: 1.5rem; }
-        .choice-title { 
-            font-size: 2rem; 
-            color: var(--electric-blue); 
+        .choice-icon { 
+            font-size: 3.5rem; 
             margin-bottom: 1rem; 
+        }
+        .choice-title { 
+            font-size: 1.8rem; 
+            color: var(--electric-blue); 
+            margin-bottom: 0.8rem; 
         }
         .choice-card.marketing .choice-title { color: var(--cyber-purple); }
         .choice-description { 
             color: var(--text-secondary); 
-            font-size: 1.1rem; 
-            line-height: 1.8; 
+            font-size: 1rem; 
+            line-height: 1.6; 
         }
         
         @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+            }
+            #landingPage {
+                height: auto;
+                min-height: 100vh;
+            }
             .landing-title { font-size: 2.5rem; }
-            .choice-cards { grid-template-columns: 1fr; }
+            .choice-cards { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+            }
+            .choice-card {
+                padding: 2rem 1.5rem;
+            }
         }
         
         @media (max-width: 480px) {
             .landing-title { font-size: 2rem; }
             .landing-subtitle { font-size: 1.2rem; }
-            .choice-description { font-size: 1rem; }
+            .choice-description { font-size: 0.9rem; }
+            .choice-icon { font-size: 3rem; }
+            .choice-title { font-size: 1.5rem; }
         }
     </style>
 </head>
