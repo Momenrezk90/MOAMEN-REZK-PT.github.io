@@ -413,15 +413,26 @@
         
         /* Seasonal Hover Effects */
         .choice-card.frozen {
-            animation: freezeEffect 0.6s ease forwards;
             border-color: #00d4ff !important;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3) !important;
+            filter: brightness(1.2);
         }
         
-        @keyframes freezeEffect {
-            0% { filter: brightness(1); }
-            50% { filter: brightness(1.5); }
-            100% { filter: brightness(1.2); }
+        .choice-card.frozen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+            animation: freezePulse 0.6s ease forwards;
+        }
+        
+        @keyframes freezePulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
         
         .ice-crystal {
@@ -450,13 +461,24 @@
         }
         
         .choice-card.blooming {
-            animation: bloomEffect 0.8s ease forwards;
+            filter: hue-rotate(10deg) brightness(1.15);
         }
         
-        @keyframes bloomEffect {
-            0% { filter: hue-rotate(0deg) brightness(1); }
-            50% { filter: hue-rotate(20deg) brightness(1.3); }
-            100% { filter: hue-rotate(0deg) brightness(1.1); }
+        .choice-card.blooming::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 183, 197, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            animation: bloomPulse 0.8s ease forwards;
+        }
+        
+        @keyframes bloomPulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
         
         .flower-burst {
@@ -486,14 +508,25 @@
         }
         
         .choice-card.sizzling {
-            animation: sizzleEffect 0.5s ease forwards;
+            filter: brightness(1.3) saturate(1.4);
         }
         
-        @keyframes sizzleEffect {
-            0%, 100% { filter: brightness(1); }
-            25% { filter: brightness(1.4) saturate(1.5); }
-            50% { filter: brightness(1.2) saturate(1.3); }
-            75% { filter: brightness(1.5) saturate(1.4); }
+        .choice-card.sizzling::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            animation: sizzlePulse 0.5s ease forwards;
+        }
+        
+        @keyframes sizzlePulse {
+            0%, 100% { opacity: 0; }
+            25%, 75% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
         
         .heat-wave {
@@ -550,14 +583,25 @@
         }
         
         .choice-card.rustling {
-            animation: rustleEffect 0.5s ease forwards;
+            filter: brightness(1.2) sepia(0.3);
         }
         
-        @keyframes rustleEffect {
-            0%, 100% { filter: brightness(1) sepia(0); }
-            25% { filter: brightness(1.2) sepia(0.3); }
-            50% { filter: brightness(1.1) sepia(0.2); }
-            75% { filter: brightness(1.3) sepia(0.4); }
+        .choice-card.rustling::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 69, 19, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+            animation: rustlePulse 0.5s ease forwards;
+        }
+        
+        @keyframes rustlePulse {
+            0%, 100% { opacity: 0; }
+            25%, 75% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
         
         .leaf-swirl {
@@ -805,6 +849,9 @@
         
         // Seasonal card hover effects
         function createWinterEffect(card) {
+            // Prevent multiple triggers
+            if (card.classList.contains('frozen')) return;
+            
             card.classList.add('frozen');
             playFreezeSound();
             
@@ -820,11 +867,12 @@
                 
                 setTimeout(() => crystal.remove(), 600);
             }
-            
-            setTimeout(() => card.classList.remove('frozen'), 600);
         }
         
         function createSpringEffect(card) {
+            // Prevent multiple triggers
+            if (card.classList.contains('blooming')) return;
+            
             card.classList.add('blooming');
             playBloomSound();
             
@@ -832,8 +880,6 @@
             for (let i = 0; i < 12; i++) {
                 const flower = document.createElement('div');
                 flower.className = 'flower-burst';
-                const angle = (Math.PI * 2 * i) / 12;
-                const distance = 100;
                 flower.style.left = '50%';
                 flower.style.top = '50%';
                 flower.style.transform = `translate(-50%, -50%)`;
@@ -842,11 +888,12 @@
                 
                 setTimeout(() => flower.remove(), 800);
             }
-            
-            setTimeout(() => card.classList.remove('blooming'), 800);
         }
         
         function createSummerEffect(card) {
+            // Prevent multiple triggers
+            if (card.classList.contains('sizzling')) return;
+            
             card.classList.add('sizzling');
             playSizzleSound();
             
@@ -870,12 +917,14 @@
             }
             
             setTimeout(() => {
-                card.classList.remove('sizzling');
                 heatWave.remove();
             }, 600);
         }
         
         function createAutumnEffect(card) {
+            // Prevent multiple triggers
+            if (card.classList.contains('rustling')) return;
+            
             card.classList.add('rustling');
             playCrunchSound();
             
@@ -898,8 +947,6 @@
                 
                 setTimeout(() => leaf.remove(), 1000);
             }
-            
-            setTimeout(() => card.classList.remove('rustling'), 500);
         }
         
         // Seasonal Effects
@@ -971,14 +1018,15 @@
         // Initialize everything on user interaction
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
+        document.addEventListener('keydown', initAudio, { once: true });
         
         // Initialize intro sequence
         window.addEventListener('load', () => {
             // Create seasonal effects
             createSeasonalEffects();
             
-            // Initialize audio on load
-            initAudio();
+            // Initialize audio on any interaction
+            document.body.addEventListener('mousemove', initAudio, { once: true });
             
             // Create particles
             setTimeout(() => {
@@ -989,24 +1037,35 @@
             setTimeout(() => {
                 document.getElementById('introScreen').classList.add('hide');
             }, 3000);
-        });
-        
-        // Add seasonal hover effects to cards
-        window.addEventListener('DOMContentLoaded', () => {
-            const season = getSeason();
             
+            // Add seasonal hover effects to cards after they appear
             setTimeout(() => {
-                document.querySelectorAll('.choice-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        if (season === 'winter') {
-                            createWinterEffect(card);
-                        } else if (season === 'spring') {
-                            createSpringEffect(card);
-                        } else if (season === 'summer') {
-                            createSummerEffect(card);
-                        } else if (season === 'autumn') {
-                            createAutumnEffect(card);
+                const season = getSeason();
+                const cards = document.querySelectorAll('.choice-card');
+                
+                cards.forEach(card => {
+                    card.addEventListener('mouseenter', function() {
+                        // Ensure audio is initialized
+                        if (!audioEnabled) {
+                            initAudio();
                         }
+                        
+                        if (season === 'winter') {
+                            createWinterEffect(this);
+                        } else if (season === 'spring') {
+                            createSpringEffect(this);
+                        } else if (season === 'summer') {
+                            createSummerEffect(this);
+                        } else if (season === 'autumn') {
+                            createAutumnEffect(this);
+                        }
+                    });
+                    
+                    // Remove class on mouse leave to allow re-triggering
+                    card.addEventListener('mouseleave', function() {
+                        setTimeout(() => {
+                            this.classList.remove('frozen', 'blooming', 'sizzling', 'rustling');
+                        }, 600);
                     });
                 });
             }, 4500);
