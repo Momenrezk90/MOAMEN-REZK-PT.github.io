@@ -649,6 +649,7 @@
         let audioContext;
         let audioEnabled = false;
         let seasonalAudio = null;
+        let audioInitialized = false;
 
         function initAudio() {
             if (!audioContext) {
@@ -661,6 +662,9 @@
         }
 
         function playSeasonalSound(season) {
+            // Only play if user has interacted
+            if (!audioInitialized) return;
+
             // Stop any existing audio
             if (seasonalAudio) {
                 seasonalAudio.pause();
@@ -679,19 +683,36 @@
             if (soundFile) {
                 seasonalAudio = new Audio(soundFile);
                 seasonalAudio.loop = true;
-                seasonalAudio.volume = 0.3;
-                
-                // Fade in effect
                 seasonalAudio.volume = 0;
-                seasonalAudio.play().catch(e => console.log('Audio play failed:', e));
                 
-                let fadeInInterval = setInterval(() => {
-                    if (seasonalAudio.volume < 0.3) {
-                        seasonalAudio.volume = Math.min(seasonalAudio.volume + 0.02, 0.3);
-                    } else {
-                        clearInterval(fadeInInterval);
-                    }
-                }, 100);
+                seasonalAudio.play().then(() => {
+                    // Fade in effect
+                    let fadeInInterval = setInterval(() => {
+                        if (seasonalAudio.volume < 0.3) {
+                            seasonalAudio.volume = Math.min(seasonalAudio.volume + 0.02, 0.3);
+                        } else {
+                            clearInterval(fadeInInterval);
+                        }
+                    }, 100);
+                }).catch(e => {
+                    console.log('Audio play requires user interaction first');
+                });
+            }
+        }
+
+        // Enable audio on first user interaction
+        function enableAudio() {
+            if (!audioInitialized) {
+                audioInitialized = true;
+                initAudio();
+                const season = getSeason();
+                
+                // Check if it's autumn and should play rain
+                if (season === 'autumn' && document.querySelector('.rain-overlay')) {
+                    playSeasonalSound('rain');
+                } else {
+                    playSeasonalSound(season);
+                }
             }
         }
 
@@ -754,7 +775,6 @@
                     snowflake.style.animationDelay = Math.random() * 10 + 's';
                     overlay.appendChild(snowflake);
                 }
-                playSeasonalSound('winter');
 
             } else if (season === 'spring') {
                 // Bloom overlay
@@ -773,7 +793,6 @@
                     petal.style.animationDelay = Math.random() * 8 + 's';
                     overlay.appendChild(petal);
                 }
-                playSeasonalSound('spring');
 
             } else if (season === 'summer') {
                 // Warmth overlay
@@ -795,7 +814,6 @@
                     firefly.style.animationDelay = Math.random() * 5 + 's';
                     overlay.appendChild(firefly);
                 }
-                playSeasonalSound('summer');
 
             } else if (season === 'autumn') {
                 // Autumn overlay
@@ -831,25 +849,20 @@
                         raindrop.style.animationDelay = Math.random() * 2 + 's';
                         overlay.appendChild(raindrop);
                     }
-                    playSeasonalSound('rain');
-                } else {
-                    playSeasonalSound('autumn');
                 }
             }
         }
 
-        // Initialize everything on user interaction
-        document.addEventListener('click', initAudio, { once: true });
-        document.addEventListener('touchstart', initAudio, { once: true });
-        document.addEventListener('keydown', initAudio, { once: true });
+        // Listen for user interactions to enable audio
+        const userInteractionEvents = ['click', 'touchstart', 'keydown', 'mousedown'];
+        userInteractionEvents.forEach(eventType => {
+            document.addEventListener(eventType, enableAudio, { once: true });
+        });
 
         // Initialize intro sequence
         window.addEventListener('load', () => {
             // Create seasonal effects
             createSeasonalEffects();
-
-            // Initialize audio on any interaction
-            document.body.addEventListener('mousemove', initAudio, { once: true });
 
             // Create particles
             setTimeout(() => {
