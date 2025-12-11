@@ -292,7 +292,9 @@
         @keyframes glitchText {
             0%, 90%, 100% { text-shadow: none; }
             92% { text-shadow: 2px 0 var(--electric-blue), -2px 0 var(--cyber-purple); }
+            94% { text-shadow: -2px 0 var(--electric-blue), 2px 0 var(--cyber-purple); }
         }
+
         @keyframes cardShine {
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
@@ -448,18 +450,19 @@
             max-width: 1000px; 
             width: 100%;
         }
+
         .landing-title {
             font-size: 4.5rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            animation: glitchText 1.4s infinite;
             background: linear-gradient(90deg, var(--electric-blue), var(--cyber-purple), var(--neon-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
             transform: translateY(-50px);
             opacity: 0;
-            animation: slideInTitle 1s ease forwards 3.5s;
+            animation: slideInTitle 1s ease forwards 3.5s, glitchText 2s infinite 4.5s;
         }
 
         @keyframes slideInTitle {
@@ -662,7 +665,6 @@
         }
 
         function stopAllAudio() {
-            // Stop any existing audio
             Object.values(seasonalAudio).forEach(audio => {
                 if (audio) {
                     audio.pause();
@@ -673,12 +675,10 @@
         }
 
         function playSeasonalSound(sounds) {
-            // Only play if user has interacted
             if (!audioInitialized) return;
 
             stopAllAudio();
 
-            // Ensure sounds is an array
             const soundArray = Array.isArray(sounds) ? sounds : [sounds];
 
             const soundMap = {
@@ -696,11 +696,9 @@
                     audio.loop = true;
                     audio.volume = 0;
                     
-                    // If multiple sounds, adjust volume to prevent distortion
                     const targetVolume = soundArray.length > 1 ? 0.2 : 0.3;
                     
                     audio.play().then(() => {
-                        // Fade in effect
                         let fadeInInterval = setInterval(() => {
                             if (audio.volume < targetVolume) {
                                 audio.volume = Math.min(audio.volume + 0.02, targetVolume);
@@ -717,16 +715,13 @@
             });
         }
 
-        // Enable audio on first user interaction
         function enableAudio() {
             if (!audioInitialized) {
                 audioInitialized = true;
                 initAudio();
                 const season = getSeason();
                 
-                // Check season and play appropriate sound
                 if (season === 'winter') {
-                    // Use the stored winter weather types (can be array)
                     playSeasonalSound(window.winterWeatherTypes || ['winter']);
                 } else if (season === 'autumn' && document.querySelector('.rain-overlay')) {
                     playSeasonalSound(['rain']);
@@ -736,7 +731,6 @@
             }
         }
 
-        // Create particles explosion
         function createParticles() {
             const introContent = document.querySelector('.intro-content');
             const particleCount = 50;
@@ -764,9 +758,8 @@
             }
         }
 
-        // Seasonal Effects
         function getSeason() {
-            const month = new Date().getMonth() + 1; // 1-12
+            const month = new Date().getMonth() + 1;
             if (month >= 3 && month <= 5) return 'spring';
             if (month >= 6 && month <= 8) return 'summer';
             if (month >= 9 && month <= 11) return 'autumn';
@@ -778,20 +771,14 @@
             const overlay = document.getElementById('seasonalOverlay');
 
             if (season === 'winter') {
-                // Frost overlay
                 const frostOverlay = document.createElement('div');
                 frostOverlay.className = 'frost-overlay';
                 overlay.appendChild(frostOverlay);
 
-                // Random winter weather pattern (0-2: snow only, 3-5: rain only, 6-9: both)
                 const weatherPattern = Math.floor(Math.random() * 10);
-                
-                // Initialize weather types array
                 window.winterWeatherTypes = [];
                 
-                // Snow effect
                 if (weatherPattern <= 2 || weatherPattern >= 6) {
-                    // Enhanced snowflakes with varying sizes
                     const snowflakeCount = weatherPattern >= 6 ? 60 : 80;
                     for (let i = 0; i < snowflakeCount; i++) {
                         const snowflake = document.createElement('div');
@@ -807,13 +794,11 @@
                     window.winterWeatherTypes.push('winter');
                 }
 
-                // Rain effect
                 if (weatherPattern >= 3) {
                     const rainOverlay = document.createElement('div');
                     rainOverlay.className = 'rain-overlay';
                     overlay.appendChild(rainOverlay);
 
-                    // Fewer raindrops if combined with snow
                     const raindropCount = weatherPattern >= 6 ? 50 : 80;
                     
                     for (let i = 0; i < raindropCount; i++) {
@@ -830,12 +815,10 @@
                 }
 
             } else if (season === 'spring') {
-                // Bloom overlay
                 const bloomOverlay = document.createElement('div');
                 bloomOverlay.className = 'bloom-overlay';
                 overlay.appendChild(bloomOverlay);
 
-                // Cherry blossom petals with more variety
                 for (let i = 0; i < 50; i++) {
                     const petal = document.createElement('div');
                     petal.className = 'petal';
@@ -848,12 +831,10 @@
                 }
 
             } else if (season === 'summer') {
-                // Warmth overlay
                 const warmthOverlay = document.createElement('div');
                 warmthOverlay.className = 'warmth-overlay';
                 overlay.appendChild(warmthOverlay);
 
-                // Fireflies with organic movement
                 for (let i = 0; i < 35; i++) {
                     const firefly = document.createElement('div');
                     firefly.className = 'firefly';
@@ -869,12 +850,10 @@
                 }
 
             } else if (season === 'autumn') {
-                // Autumn overlay
                 const autumnOverlay = document.createElement('div');
                 autumnOverlay.className = 'autumn-overlay';
                 overlay.appendChild(autumnOverlay);
 
-                // Falling leaves with variety
                 const leafEmojis = ['🍂', '🍁', '🍃'];
                 for (let i = 0; i < 50; i++) {
                     const leaf = document.createElement('div');
@@ -887,7 +866,6 @@
                     overlay.appendChild(leaf);
                 }
                 
-                // Add occasional rain effect in autumn
                 if (Math.random() > 0.5) {
                     const rainOverlay = document.createElement('div');
                     rainOverlay.className = 'rain-overlay';
@@ -906,23 +884,18 @@
             }
         }
 
-        // Listen for user interactions to enable audio
         const userInteractionEvents = ['click', 'touchstart', 'keydown', 'mousedown'];
         userInteractionEvents.forEach(eventType => {
             document.addEventListener(eventType, enableAudio, { once: true });
         });
 
-        // Initialize intro sequence
         window.addEventListener('load', () => {
-            // Create seasonal effects
             createSeasonalEffects();
 
-            // Create particles
             setTimeout(() => {
                 createParticles();
             }, 800);
 
-            // Hide intro screen
             setTimeout(() => {
                 document.getElementById('introScreen').classList.add('hide');
             }, 3000);
