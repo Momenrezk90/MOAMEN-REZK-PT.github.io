@@ -648,7 +648,7 @@
         // Enhanced Audio Context with user interaction
         let audioContext;
         let audioEnabled = false;
-        let seasonalAudio = null;
+        let seasonalAudio = {};
         let audioInitialized = false;
 
         function initAudio() {
@@ -661,15 +661,25 @@
             }
         }
 
-        function playSeasonalSound(season) {
+        function stopAllAudio() {
+            // Stop any existing audio
+            Object.values(seasonalAudio).forEach(audio => {
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+            });
+            seasonalAudio = {};
+        }
+
+        function playSeasonalSound(sounds) {
             // Only play if user has interacted
             if (!audioInitialized) return;
 
-            // Stop any existing audio
-            if (seasonalAudio) {
-                seasonalAudio.pause();
-                seasonalAudio.currentTime = 0;
-            }
+            stopAllAudio();
+
+            // Ensure sounds is an array
+            const soundArray = Array.isArray(sounds) ? sounds : [sounds];
 
             const soundMap = {
                 'winter': 'Sounds/snowfall.mp3',
@@ -679,25 +689,32 @@
                 'rain': 'Sounds/rain.mp3'
             };
 
-            const soundFile = soundMap[season];
-            if (soundFile) {
-                seasonalAudio = new Audio(soundFile);
-                seasonalAudio.loop = true;
-                seasonalAudio.volume = 0;
-                
-                seasonalAudio.play().then(() => {
-                    // Fade in effect
-                    let fadeInInterval = setInterval(() => {
-                        if (seasonalAudio.volume < 0.3) {
-                            seasonalAudio.volume = Math.min(seasonalAudio.volume + 0.02, 0.3);
-                        } else {
-                            clearInterval(fadeInInterval);
-                        }
-                    }, 100);
-                }).catch(e => {
-                    console.log('Audio play requires user interaction first');
-                });
-            }
+            soundArray.forEach((soundType, index) => {
+                const soundFile = soundMap[soundType];
+                if (soundFile) {
+                    const audio = new Audio(soundFile);
+                    audio.loop = true;
+                    audio.volume = 0;
+                    
+                    // If multiple sounds, adjust volume to prevent distortion
+                    const targetVolume = soundArray.length > 1 ? 0.2 : 0.3;
+                    
+                    audio.play().then(() => {
+                        // Fade in effect
+                        let fadeInInterval = setInterval(() => {
+                            if (audio.volume < targetVolume) {
+                                audio.volume = Math.min(audio.volume + 0.02, targetVolume);
+                            } else {
+                                clearInterval(fadeInInterval);
+                            }
+                        }, 100);
+                    }).catch(e => {
+                        console.log('Audio play requires user interaction first');
+                    });
+                    
+                    seasonalAudio[soundType] = audio;
+                }
+            });
         }
 
         // Enable audio on first user interaction
@@ -707,11 +724,14 @@
                 initAudio();
                 const season = getSeason();
                 
-                // Check if it's autumn and should play rain
-                if (season === 'autumn' && document.querySelector('.rain-overlay')) {
-                    playSeasonalSound('rain');
+                // Check season and play appropriate sound
+                if (season === 'winter') {
+                    // Use the stored winter weather types (can be array)
+                    playSeasonalSound(window.winterWeatherTypes || ['winter']);
+                } else if (season === 'autumn' && document.querySelector('.rain-overlay')) {
+                    playSeasonalSound(['rain']);
                 } else {
-                    playSeasonalSound(season);
+                    playSeasonalSound([season]);
                 }
             }
         }
@@ -763,17 +783,50 @@
                 frostOverlay.className = 'frost-overlay';
                 overlay.appendChild(frostOverlay);
 
-                // Enhanced snowflakes with varying sizes
-                for (let i = 0; i < 80; i++) {
-                    const snowflake = document.createElement('div');
-                    snowflake.className = 'snowflake';
-                    const snowflakeSymbols = ['❄', '❅', '❆'];
-                    snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
-                    snowflake.style.left = Math.random() * 100 + '%';
-                    snowflake.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
-                    snowflake.style.animationDuration = (Math.random() * 15 + 10) + 's';
-                    snowflake.style.animationDelay = Math.random() * 10 + 's';
-                    overlay.appendChild(snowflake);
+                // Random winter weather pattern (0-2: snow only, 3-5: rain only, 6-9: both)
+                const weatherPattern = Math.floor(Math.random() * 10);
+                
+                // Initialize weather types array
+                window.winterWeatherTypes = [];
+                
+                // Snow effect
+                if (weatherPattern <= 2 || weatherPattern >= 6) {
+                    // Enhanced snowflakes with varying sizes
+                    const snowflakeCount = weatherPattern >= 6 ? 60 : 80;
+                    for (let i = 0; i < snowflakeCount; i++) {
+                        const snowflake = document.createElement('div');
+                        snowflake.className = 'snowflake';
+                        const snowflakeSymbols = ['❄', '❅', '❆'];
+                        snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+                        snowflake.style.left = Math.random() * 100 + '%';
+                        snowflake.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
+                        snowflake.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                        snowflake.style.animationDelay = Math.random() * 10 + 's';
+                        overlay.appendChild(snowflake);
+                    }
+                    window.winterWeatherTypes.push('winter');
+                }
+
+                // Rain effect
+                if (weatherPattern >= 3) {
+                    const rainOverlay = document.createElement('div');
+                    rainOverlay.className = 'rain-overlay';
+                    overlay.appendChild(rainOverlay);
+
+                    // Fewer raindrops if combined with snow
+                    const raindropCount = weatherPattern >= 6 ? 50 : 80;
+                    
+                    for (let i = 0; i < raindropCount; i++) {
+                        const raindrop = document.createElement('div');
+                        raindrop.className = 'raindrop';
+                        raindrop.style.left = Math.random() * 100 + '%';
+                        raindrop.style.height = (Math.random() * 20 + 20) + 'px';
+                        raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                        raindrop.style.animationDelay = Math.random() * 2 + 's';
+                        raindrop.style.opacity = weatherPattern >= 6 ? '0.6' : '0.7';
+                        overlay.appendChild(raindrop);
+                    }
+                    window.winterWeatherTypes.push('rain');
                 }
 
             } else if (season === 'spring') {
