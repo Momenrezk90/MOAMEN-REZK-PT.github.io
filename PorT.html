@@ -7,20 +7,13 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --electric-blue: 
-#00f3ff;
-            --cyber-purple: 
-#b400ff;
-            --neon-green: 
-#39ff14;
-            --dark-bg: 
-#0a0a0a;
-            --card-bg: 
-#1a1a1a;
-            --text-primary: 
-#ffffff;
-            --text-secondary: 
-#b0b0b0;
+            --electric-blue: #00f3ff;
+            --cyber-purple: #b400ff;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -64,63 +57,108 @@
             top: -10px;
             color: #fff;
             font-size: 1em;
-            opacity: 0.8;
+            opacity: 0;
             animation: snowfall linear infinite;
-            text-shadow: 0 0 5px #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(173, 216, 230, 0.6);
+            filter: blur(0.5px);
         }
 
         @keyframes snowfall {
             0% {
                 transform: translateY(0) rotate(0deg);
-                opacity: 0.8;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.6;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg);
-                opacity: 0.3;
+                opacity: 0;
             }
+        }
+
+        /* Winter frost overlay */
+        .frost-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(173, 216, 230, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(135, 206, 250, 0.1) 0%, transparent 50%);
+            animation: frostPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes frostPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         /* Spring - Cherry Blossoms */
         .petal {
             position: absolute;
             top: -10px;
-            width: 10px;
-            height: 10px;
-            background: linear-gradient(135deg, 
-#ffb7c5 0%, 
-#ff85a1 100%);
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ffb7d5 0%, #ffa0c9 50%, #ff85b8 100%);
             border-radius: 50% 0 50% 0;
             animation: petalfall linear infinite;
-            opacity: 0.7;
+            opacity: 0;
+            box-shadow: 0 2px 5px rgba(255, 182, 193, 0.3);
         }
 
         @keyframes petalfall {
             0% {
                 transform: translateY(0) rotate(0deg) translateX(0);
-                opacity: 0.7;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
             }
             50% {
-                transform: translateY(50vh) rotate(180deg) translateX(50px);
+                transform: translateY(50vh) rotate(180deg) translateX(60px);
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.5;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg) translateX(0);
-                opacity: 0.2;
+                opacity: 0;
             }
+        }
+
+        /* Spring bloom overlay */
+        .bloom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(255, 182, 193, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(255, 192, 203, 0.06) 0%, transparent 50%);
+            animation: bloomPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes bloomPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
         }
 
         /* Summer - Fireflies */
         .firefly {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: 
-#ffeb3b;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, #ffeb3b 0%, #ffd700 50%, transparent 70%);
             border-radius: 50%;
-            box-shadow: 0 0 10px 
-#ffeb3b, 0 0 20px 
-#ffeb3b;
+            box-shadow: 0 0 15px #ffeb3b, 0 0 30px #ffd700, 0 0 45px rgba(255, 235, 59, 0.3);
             animation: firefly-float 8s ease-in-out infinite;
             opacity: 0;
+            filter: blur(0.5px);
         }
 
         @keyframes firefly-float {
@@ -128,16 +166,40 @@
                 transform: translate(0, 0);
                 opacity: 0;
             }
-            10% {
+            5% {
+                opacity: 0.9;
+            }
+            25% {
                 opacity: 1;
+                box-shadow: 0 0 20px #ffeb3b, 0 0 40px #ffd700, 0 0 60px rgba(255, 235, 59, 0.4);
             }
             50% {
                 transform: translate(var(--fx), var(--fy));
                 opacity: 1;
             }
-            90% {
-                opacity: 1;
+            75% {
+                opacity: 0.9;
             }
+            95% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Summer warmth overlay */
+        .warmth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 30%, rgba(255, 200, 50, 0.06) 0%, transparent 60%),
+                        radial-gradient(circle at 30% 70%, rgba(255, 235, 59, 0.04) 0%, transparent 50%);
+            animation: warmthPulse 12s ease-in-out infinite;
+        }
+
+        @keyframes warmthPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         /* Autumn - Falling Leaves */
@@ -147,21 +209,84 @@
             width: 15px;
             height: 15px;
             animation: leaffall linear infinite;
-            opacity: 0.8;
+            opacity: 0;
+            filter: drop-shadow(0 2px 3px rgba(139, 69, 19, 0.3));
         }
 
         @keyframes leaffall {
             0% {
                 transform: translateY(0) rotate(0deg) translateX(0);
-                opacity: 0.8;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
             }
             50% {
-                transform: translateY(50vh) rotate(180deg) translateX(-30px);
+                transform: translateY(50vh) rotate(180deg) translateX(-40px);
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.5;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg) translateX(0);
-                opacity: 0.3;
+                opacity: 0;
             }
+        }
+
+        /* Autumn ambience overlay */
+        .autumn-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 40% 40%, rgba(205, 92, 92, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(184, 134, 11, 0.06) 0%, transparent 50%);
+            animation: autumnPulse 9s ease-in-out infinite;
+        }
+
+        @keyframes autumnPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Rain effect */
+        .raindrop {
+            position: absolute;
+            top: -10px;
+            width: 2px;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(174, 194, 224, 0.8) 0%, rgba(174, 194, 224, 0.2) 100%);
+            animation: rainfall linear infinite;
+            opacity: 0.7;
+            border-radius: 50%;
+        }
+
+        @keyframes rainfall {
+            0% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0.2;
+            }
+        }
+
+        .rain-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(100, 120, 150, 0.1) 0%, rgba(60, 80, 110, 0.05) 100%);
+            animation: rainPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes rainPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         @keyframes glitchText {
@@ -523,6 +648,7 @@
         // Enhanced Audio Context with user interaction
         let audioContext;
         let audioEnabled = false;
+        let seasonalAudio = null;
 
         function initAudio() {
             if (!audioContext) {
@@ -531,6 +657,41 @@
             }
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
+            }
+        }
+
+        function playSeasonalSound(season) {
+            // Stop any existing audio
+            if (seasonalAudio) {
+                seasonalAudio.pause();
+                seasonalAudio.currentTime = 0;
+            }
+
+            const soundMap = {
+                'winter': '/Sounds/snowfall.mp3',
+                'spring': '/Sounds/Spring.mp3',
+                'summer': '/Sounds/summer.mp3',
+                'autumn': '/Sounds/autumn.mp3',
+                'rain': '/Sounds/rain.mp3'
+            };
+
+            const soundFile = soundMap[season];
+            if (soundFile) {
+                seasonalAudio = new Audio(soundFile);
+                seasonalAudio.loop = true;
+                seasonalAudio.volume = 0.3;
+                
+                // Fade in effect
+                seasonalAudio.volume = 0;
+                seasonalAudio.play().catch(e => console.log('Audio play failed:', e));
+                
+                let fadeInInterval = setInterval(() => {
+                    if (seasonalAudio.volume < 0.3) {
+                        seasonalAudio.volume = Math.min(seasonalAudio.volume + 0.02, 0.3);
+                    } else {
+                        clearInterval(fadeInInterval);
+                    }
+                }, 100);
             }
         }
 
@@ -548,15 +709,12 @@
                 const tx = Math.cos(angle) * velocity;
                 const ty = Math.sin(angle) * velocity;
 
-                particle.style.setProperty('--tx', ${tx}px);
-                particle.style.setProperty('--ty', ${ty}px);
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
                 particle.style.left = '50%';
                 particle.style.top = '50%';
 
-                const colors = ['
-#00f3ff', '
-#b400ff', '
-#39ff14'];
+                const colors = ['#00f3ff', '#b400ff', '#39ff14'];
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
 
                 introContent.appendChild(particle);
@@ -579,54 +737,103 @@
             const overlay = document.getElementById('seasonalOverlay');
 
             if (season === 'winter') {
-                // Snowflakes
-                for (let i = 0; i < 50; i++) {
+                // Frost overlay
+                const frostOverlay = document.createElement('div');
+                frostOverlay.className = 'frost-overlay';
+                overlay.appendChild(frostOverlay);
+
+                // Enhanced snowflakes with varying sizes
+                for (let i = 0; i < 80; i++) {
                     const snowflake = document.createElement('div');
                     snowflake.className = 'snowflake';
-                    snowflake.textContent = '❄';
+                    const snowflakeSymbols = ['❄', '❅', '❆'];
+                    snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
                     snowflake.style.left = Math.random() * 100 + '%';
-                    snowflake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
-                    snowflake.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    snowflake.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
+                    snowflake.style.animationDuration = (Math.random() * 15 + 10) + 's';
                     snowflake.style.animationDelay = Math.random() * 10 + 's';
                     overlay.appendChild(snowflake);
                 }
+                playSeasonalSound('winter');
+
             } else if (season === 'spring') {
-                // Cherry blossom petals
-                for (let i = 0; i < 30; i++) {
+                // Bloom overlay
+                const bloomOverlay = document.createElement('div');
+                bloomOverlay.className = 'bloom-overlay';
+                overlay.appendChild(bloomOverlay);
+
+                // Cherry blossom petals with more variety
+                for (let i = 0; i < 50; i++) {
                     const petal = document.createElement('div');
                     petal.className = 'petal';
                     petal.style.left = Math.random() * 100 + '%';
-                    petal.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                    petal.style.width = (Math.random() * 8 + 8) + 'px';
+                    petal.style.height = (Math.random() * 8 + 8) + 'px';
+                    petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
                     petal.style.animationDelay = Math.random() * 8 + 's';
                     overlay.appendChild(petal);
                 }
+                playSeasonalSound('spring');
+
             } else if (season === 'summer') {
-                // Fireflies
-                for (let i = 0; i < 20; i++) {
+                // Warmth overlay
+                const warmthOverlay = document.createElement('div');
+                warmthOverlay.className = 'warmth-overlay';
+                overlay.appendChild(warmthOverlay);
+
+                // Fireflies with organic movement
+                for (let i = 0; i < 35; i++) {
                     const firefly = document.createElement('div');
                     firefly.className = 'firefly';
                     const startX = Math.random() * 100;
                     const startY = Math.random() * 100;
                     firefly.style.left = startX + '%';
                     firefly.style.top = startY + '%';
-                    firefly.style.setProperty('--fx', (Math.random() * 200 - 100) + 'px');
-                    firefly.style.setProperty('--fy', (Math.random() * 200 - 100) + 'px');
-                    firefly.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                    firefly.style.setProperty('--fx', (Math.random() * 300 - 150) + 'px');
+                    firefly.style.setProperty('--fy', (Math.random() * 300 - 150) + 'px');
+                    firefly.style.animationDuration = (Math.random() * 5 + 5) + 's';
                     firefly.style.animationDelay = Math.random() * 5 + 's';
                     overlay.appendChild(firefly);
                 }
+                playSeasonalSound('summer');
+
             } else if (season === 'autumn') {
-                // Falling leaves
-                const leafEmojis = ['🍂', '🍁'];
-                for (let i = 0; i < 30; i++) {
+                // Autumn overlay
+                const autumnOverlay = document.createElement('div');
+                autumnOverlay.className = 'autumn-overlay';
+                overlay.appendChild(autumnOverlay);
+
+                // Falling leaves with variety
+                const leafEmojis = ['🍂', '🍁', '🍃'];
+                for (let i = 0; i < 50; i++) {
                     const leaf = document.createElement('div');
                     leaf.className = 'leaf';
                     leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
                     leaf.style.left = Math.random() * 100 + '%';
-                    leaf.style.fontSize = (Math.random() * 1 + 0.7) + 'em';
-                    leaf.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    leaf.style.fontSize = (Math.random() * 1.2 + 0.7) + 'em';
+                    leaf.style.animationDuration = (Math.random() * 12 + 10) + 's';
                     leaf.style.animationDelay = Math.random() * 10 + 's';
                     overlay.appendChild(leaf);
+                }
+                
+                // Add occasional rain effect in autumn
+                if (Math.random() > 0.5) {
+                    const rainOverlay = document.createElement('div');
+                    rainOverlay.className = 'rain-overlay';
+                    overlay.appendChild(rainOverlay);
+
+                    for (let i = 0; i < 60; i++) {
+                        const raindrop = document.createElement('div');
+                        raindrop.className = 'raindrop';
+                        raindrop.style.left = Math.random() * 100 + '%';
+                        raindrop.style.height = (Math.random() * 20 + 20) + 'px';
+                        raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                        raindrop.style.animationDelay = Math.random() * 2 + 's';
+                        overlay.appendChild(raindrop);
+                    }
+                    playSeasonalSound('rain');
+                } else {
+                    playSeasonalSound('autumn');
                 }
             }
         }
