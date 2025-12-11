@@ -40,7 +40,6 @@
             50% { opacity: 0.6; }
         }
         
-        /* Seasonal Overlay */
         #seasonalOverlay {
             position: fixed;
             top: 0;
@@ -51,103 +50,28 @@
             z-index: 100;
         }
         
-        /* Winter - Snowflakes */
-        .snowflake {
+        .snowflake, .raindrop {
             position: absolute;
             top: -10px;
             color: #fff;
             font-size: 1em;
             opacity: 0.8;
-            animation: snowfall linear infinite;
+            animation: fall linear infinite;
             text-shadow: 0 0 5px #fff;
         }
         
-        @keyframes snowfall {
+        .raindrop {
+            color: #4fc3f7;
+            text-shadow: 0 0 3px #4fc3f7;
+        }
+        
+        @keyframes fall {
             0% {
                 transform: translateY(0) rotate(0deg);
                 opacity: 0.8;
             }
             100% {
                 transform: translateY(100vh) rotate(360deg);
-                opacity: 0.3;
-            }
-        }
-        
-        /* Spring - Cherry Blossoms */
-        .petal {
-            position: absolute;
-            top: -10px;
-            width: 10px;
-            height: 10px;
-            background: linear-gradient(135deg, #ffb7c5 0%, #ff85a1 100%);
-            border-radius: 50% 0 50% 0;
-            animation: petalfall linear infinite;
-            opacity: 0.7;
-        }
-        
-        @keyframes petalfall {
-            0% {
-                transform: translateY(0) rotate(0deg) translateX(0);
-                opacity: 0.7;
-            }
-            50% {
-                transform: translateY(50vh) rotate(180deg) translateX(50px);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg) translateX(0);
-                opacity: 0.2;
-            }
-        }
-        
-        /* Summer - Fireflies */
-        .firefly {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #ffeb3b;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
-            animation: firefly-float 8s ease-in-out infinite;
-            opacity: 0;
-        }
-        
-        @keyframes firefly-float {
-            0%, 100% {
-                transform: translate(0, 0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            50% {
-                transform: translate(var(--fx), var(--fy));
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-        }
-        
-        /* Autumn - Falling Leaves */
-        .leaf {
-            position: absolute;
-            top: -10px;
-            width: 15px;
-            height: 15px;
-            animation: leaffall linear infinite;
-            opacity: 0.8;
-        }
-        
-        @keyframes leaffall {
-            0% {
-                transform: translateY(0) rotate(0deg) translateX(0);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translateY(50vh) rotate(180deg) translateX(-30px);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg) translateX(0);
                 opacity: 0.3;
             }
         }
@@ -161,7 +85,6 @@
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
-        /* Intro Animation Styles */
         #introScreen {
             position: fixed;
             top: 0;
@@ -467,10 +390,8 @@
 <body>
     <div class="cyber-bg"></div>
     
-    <!-- Seasonal Overlay -->
     <div id="seasonalOverlay"></div>
 
-    <!-- Epic Intro Screen -->
     <div id="introScreen">
         <div class="intro-content">
             <div class="shock-wave"></div>
@@ -479,14 +400,13 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="landingPage">
         <div class="landing-content">
             <h1 class="landing-title">MOAMEN REZK</h1>
             <p class="landing-subtitle">Choose What You Want to Discover</p>
             
             <div class="choice-cards">
-                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Cy-PT.html" class="choice-card" target="_blank" rel="noopener noreferrer">
+                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Cy-PT.html" class="choice-card" target="_blank">
                     <div class="choice-icon">🔐</div>
                     <h2 class="choice-title">Cybersecurity</h2>
                     <p class="choice-description">
@@ -495,7 +415,7 @@
                     </p>
                 </a>
 
-                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Mark-PT.html" class="choice-card marketing" target="_blank" rel="noopener noreferrer">
+                <a href="https://momenrezk90.github.io/MOAMEN-REZK-PT.github.io/Mark-PT.html" class="choice-card marketing" target="_blank">
                     <div class="choice-icon">🎨</div>
                     <h2 class="choice-title">Tech Marketing</h2>
                     <p class="choice-description">
@@ -508,7 +428,6 @@
     </div>
 
     <script>
-        // Enhanced Audio Context with user interaction
         let audioContext;
         let audioEnabled = false;
         
@@ -522,7 +441,72 @@
             }
         }
         
-        // Create particles explosion
+        // Sound Effects
+        function playSound(frequency, duration, type = 'sine', volume = 0.1) {
+            if (!audioEnabled || !audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            gainNode.gain.value = volume;
+            
+            oscillator.start(audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        function playWindSound() {
+            if (!audioEnabled || !audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 100 + Math.random() * 50;
+            oscillator.type = 'sawtooth';
+            filter.type = 'lowpass';
+            filter.frequency.value = 300;
+            gainNode.gain.value = 0.15;
+            
+            const now = audioContext.currentTime;
+            oscillator.start(now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+            oscillator.stop(now + 0.8);
+        }
+        
+        function playSnowSound() {
+            if (!audioEnabled || !audioContext) return;
+            playSound(2000 + Math.random() * 1000, 0.05, 'sine', 0.02);
+        }
+        
+        function playRainSound() {
+            if (!audioEnabled || !audioContext) return;
+            playSound(1500 + Math.random() * 500, 0.03, 'square', 0.03);
+        }
+        
+        function createAmbientLoop(isSnow) {
+            if (!audioEnabled) return;
+            
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    if (isSnow) {
+                        playSnowSound();
+                    } else {
+                        playRainSound();
+                    }
+                }
+            }, 100);
+        }
+        
         function createParticles() {
             const introContent = document.querySelector('.intro-content');
             const particleCount = 50;
@@ -545,14 +529,12 @@
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 
                 introContent.appendChild(particle);
-                
                 setTimeout(() => particle.remove(), 2000);
             }
         }
         
-        // Seasonal Effects
         function getSeason() {
-            const month = new Date().getMonth() + 1; // 1-12
+            const month = new Date().getMonth() + 1;
             if (month >= 3 && month <= 5) return 'spring';
             if (month >= 6 && month <= 8) return 'summer';
             if (month >= 9 && month <= 11) return 'autumn';
@@ -562,79 +544,59 @@
         function createSeasonalEffects() {
             const season = getSeason();
             const overlay = document.getElementById('seasonalOverlay');
+            const isWinter = season === 'winter';
             
-            if (season === 'winter') {
-                // Snowflakes
-                for (let i = 0; i < 50; i++) {
-                    const snowflake = document.createElement('div');
-                    snowflake.className = 'snowflake';
-                    snowflake.textContent = '❄';
-                    snowflake.style.left = Math.random() * 100 + '%';
-                    snowflake.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
-                    snowflake.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                    snowflake.style.animationDelay = Math.random() * 10 + 's';
-                    overlay.appendChild(snowflake);
-                }
-            } else if (season === 'spring') {
-                // Cherry blossom petals
-                for (let i = 0; i < 30; i++) {
-                    const petal = document.createElement('div');
-                    petal.className = 'petal';
-                    petal.style.left = Math.random() * 100 + '%';
-                    petal.style.animationDuration = (Math.random() * 8 + 8) + 's';
-                    petal.style.animationDelay = Math.random() * 8 + 's';
-                    overlay.appendChild(petal);
-                }
-            } else if (season === 'summer') {
-                // Fireflies
-                for (let i = 0; i < 20; i++) {
-                    const firefly = document.createElement('div');
-                    firefly.className = 'firefly';
-                    const startX = Math.random() * 100;
-                    const startY = Math.random() * 100;
-                    firefly.style.left = startX + '%';
-                    firefly.style.top = startY + '%';
-                    firefly.style.setProperty('--fx', (Math.random() * 200 - 100) + 'px');
-                    firefly.style.setProperty('--fy', (Math.random() * 200 - 100) + 'px');
-                    firefly.style.animationDuration = (Math.random() * 4 + 6) + 's';
-                    firefly.style.animationDelay = Math.random() * 5 + 's';
-                    overlay.appendChild(firefly);
-                }
-            } else if (season === 'autumn') {
-                // Falling leaves
-                const leafEmojis = ['🍂', '🍁'];
-                for (let i = 0; i < 30; i++) {
-                    const leaf = document.createElement('div');
-                    leaf.className = 'leaf';
-                    leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
-                    leaf.style.left = Math.random() * 100 + '%';
-                    leaf.style.fontSize = (Math.random() * 1 + 0.7) + 'em';
-                    leaf.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                    leaf.style.animationDelay = Math.random() * 10 + 's';
-                    overlay.appendChild(leaf);
-                }
+            // Create snow or rain based on season
+            const particleCount = isWinter ? 50 : 80;
+            const particleChar = isWinter ? '❄' : '💧';
+            const className = isWinter ? 'snowflake' : 'raindrop';
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = className;
+                particle.textContent = particleChar;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.fontSize = (Math.random() * 1 + 0.5) + 'em';
+                particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                overlay.appendChild(particle);
+                
+                // Add sound on creation
+                setTimeout(() => {
+                    if (isWinter) {
+                        playSnowSound();
+                    } else {
+                        playRainSound();
+                    }
+                }, Math.random() * 2000);
             }
+            
+            // Start ambient sound loop
+            createAmbientLoop(isWinter);
         }
         
-        // Initialize everything on user interaction
+        // Add hover sound to cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.choice-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    playWindSound();
+                });
+            });
+        });
+        
+        // Initialize on user interaction
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
-        document.addEventListener('keydown', initAudio, { once: true });
         
-        // Initialize intro sequence
         window.addEventListener('load', () => {
-            // Create seasonal effects
             createSeasonalEffects();
-            
-            // Initialize audio on any interaction
             document.body.addEventListener('mousemove', initAudio, { once: true });
             
-            // Create particles
             setTimeout(() => {
                 createParticles();
             }, 800);
             
-            // Hide intro screen
             setTimeout(() => {
                 document.getElementById('introScreen').classList.add('hide');
             }, 3000);
